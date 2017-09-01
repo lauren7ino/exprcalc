@@ -6,6 +6,7 @@ echo.
 "c:\Program Files\Git\bin\git.exe" push origin master
 echo.
 if errorlevel 1 pause
+"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" https://github.com/lauren7ino/exprcalc/tree/master
 
 ng build --prod --base-href "https://lauren7ino.github.io/exprcalc/"
 echo.
@@ -14,3 +15,4 @@ if errorlevel 1 pause
 angular-cli-ghpages
 echo.
 if errorlevel 1 pause
+"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" https://lauren7ino.github.io/exprcalc/
