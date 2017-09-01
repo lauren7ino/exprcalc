@@ -1,5 +1,6 @@
 import { DisplayComponent } from './display/display.component';
 import { Component, OnInit, NgModule } from '@angular/core';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -20,10 +21,26 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     const localNum = parseFloat('1234.5').toLocaleString();
-    this._localThousands = localNum[1] !== '2' ? localNum[1] : ''; // May not have thousands separator
+    this._localThousands = localNum[1] !== '2' ? localNum[1] : ''; // May not exist thousands separator
     this._localDecimal = localNum[localNum.length - 2];
     this.resetPress();
   }
+
+  @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+      if (event.key === 'c' || event.key === 'Delete') {
+        this.resetPress();
+      } else if (event.key === '(' || event.key === ')') {
+        this.parensPress(event.key);
+      } else if (event.key === 'Backspace') {
+        this.deletePress();
+      } else if (event.key >= '0' && event.key <= '9' || event.key === '.') {
+        this.numberPress(event.key);
+      } else if (event.key === '/' || event.key === '*' || event.key === '-' || event.key === '+') {
+        this.operatorPress(event.key);
+      }
+      console.log(event.key);
+    }
 
   resetPress() {
     this._assign('');
@@ -161,7 +178,7 @@ export class AppComponent implements OnInit {
       return;
     }
     this._expression = expr;
-    console.log(this._expression);
+    // console.log(this._expression);
     this.displayExpression = this._beatifyExpr(expr);
     //
     this._calculate();
