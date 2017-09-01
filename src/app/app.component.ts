@@ -280,6 +280,9 @@ export class AppComponent implements OnInit {
     return count;
   }
   private _beautifyResult(num: number): string {
+    if (!isFinite(num)) {
+      return num.toString(); // Nothing to beautify on Infinity or NaN
+    }
     // Beautify manually because toLocaleString() only shows 2 decimals
     const text = String(Math.round(num * 100000.0) / 100000.0);
     const parts = text.split('.');
