@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     this.resetPress();
   }
 
-  @HostListener('document:keyup', ['$event'])
+  @HostListener('document:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
       if (event.key === 'c' || event.key === 'Delete') {
         this.resetPress();
@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
       } else if (event.key === '/' || event.key === '*' || event.key === '-' || event.key === '+') {
         this.operatorPress(event.key);
       }
-      console.log(event.key);
+      // console.log(event.key);
     }
 
   resetPress() {
