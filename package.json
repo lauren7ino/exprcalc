@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^4.3.6",
     "@angular/platform-browser-dynamic": "^4.3.6",
     "@angular/router": "^4.3.6",
+    "angular-2-local-storage": "^1.0.1",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.1",
     "jquery": "^3.2.1",

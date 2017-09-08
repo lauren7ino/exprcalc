@@ -2,6 +2,8 @@ import { DisplayComponent } from './display/display.component';
 import { Component, OnInit, NgModule } from '@angular/core';
 import { HostListener } from '@angular/core';
 
+import { LocalStorageService } from 'angular-2-local-storage';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,16 +16,24 @@ export class AppComponent implements OnInit {
   private _evalError = '…';
 
   displayExpression: string;
-  result: string;
+  private _result: any;
+  localResult: string;
   inError: boolean;
 
-  constructor() { }
+  private _historyKey = 'history';
+  historyList: string[] = [];
+  private _maxHistory = 10;
+
+  constructor(
+    public localStorageService: LocalStorageService
+  ) { }
 
   ngOnInit() {
     const localNum = parseFloat('1234.5').toLocaleString();
     this._localThousands = localNum[1] !== '2' ? localNum[1] : ''; // May not exist thousands separator
     this._localDecimal = localNum[localNum.length - 2];
     this.resetPress();
+    this._retrieveHistory();
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -34,15 +44,18 @@ export class AppComponent implements OnInit {
         this.parensPress(event.key);
       } else if (event.key === 'Backspace') {
         this.deletePress();
-      } else if (event.key >= '0' && event.key <= '9' || event.key === '.') {
-        this.numberPress(event.key);
+      } else if (event.key >= '0' && event.key <= '9' || event.key === '.' || event.key === ',') {
+        this.numberPress(event.key !== ',' ? event.key : '.');
       } else if (event.key === '/' || event.key === '*' || event.key === '-' || event.key === '+') {
         this.operatorPress(event.key);
+      } else if (event.key === 'Enter') {
+        this._saveToHistory();
       }
       // console.log(event.key);
     }
 
   resetPress() {
+    this._saveToHistory();
     this._assign('');
   }
   parensPress(keyInput: string) {
@@ -185,12 +198,13 @@ export class AppComponent implements OnInit {
   }
   private _calculate() {
     try {
-      const res = eval(this._expression);
+      this._result = eval(this._expression);
+      this.localResult = this._beautifyResult(this._result);
       this.inError = false;
-      this.result = this._beautifyResult(res);
     } catch (e) {
+      this._result = undefined;
+      this.localResult = this._evalError; // Can't be evaluated
       this.inError = true;
-      this.result = this._evalError; // Can't be evaluated
     }
   }
   private _canEvalExpression(expr: string): boolean {
@@ -323,5 +337,35 @@ export class AppComponent implements OnInit {
       expr = this._trimEndDecimal(expr);
     }
     return expr;
+  }
+  private _retrieveHistory() {
+    if (this.localStorageService.isSupported) {
+      try {
+        const history: string[] = JSON.parse(this.localStorageService.get<string>(this._historyKey));
+        if (history !== null && history.length > 0) {
+          this.historyList = history;
+        }
+      } catch (e) {
+        this.localStorageService.clearAll(); // Just in case the format changed
+      }
+    }
+  }
+  private _saveToHistory() {
+    if (!this.inError && this._expression !== undefined &&
+      this._expression !== '0' && this._expression !== this._result.toString()
+    ) {
+      const newHist = this._expression + ' = ' + this.localResult;
+      // Avoid duplications
+      if (this.historyList.length > 0 && this.historyList[this.historyList.length - 1] === newHist) {
+        return;
+      }
+      // Trim history
+      while (this.historyList.length >= this._maxHistory) {
+        this.historyList.shift();
+      }
+      //
+      this.historyList.push(newHist);
+      this.localStorageService.set(this._historyKey, JSON.stringify(this.historyList));
+    }
   }
 }

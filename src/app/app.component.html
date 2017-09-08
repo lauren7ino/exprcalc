@@ -1,9 +1,13 @@
 <table>
   <tr>
     <td colSpan=4>
-      <app-display extraClass="fluid black" [labelValue]="this.displayExpression"></app-display>
+      <app-display extraClass="fluid basic label" [labelValue]="this.displayExpression"></app-display>
     </td>
-    <app-display extraClass="left pointing {{ this.inError ? 'red' : 'blue' }}" [labelValue]="this.result"></app-display>
+  </tr>
+  <tr>
+    <td colspan=4>
+      <app-display extraClass="fluid {{ this.inError ? 'red' : 'black' }}" [labelValue]="this.localResult"></app-display>
+    </td>
   </tr>
   <tr>
     <td>
@@ -108,6 +112,11 @@
       <app-button-component buttonText="+" extraClass="orange"
         (click)="operatorPress('+')"
       ></app-button-component>
+    </td>
+  </tr>
+  <tr>
+    <td td colSpan=4>
+      <app-history [historyList]="this.historyList" [visible]="this.localStorageService.isSupported && this.localStorageService.length() > 0"></app-history>
     </td>
   </tr>
 </table>
