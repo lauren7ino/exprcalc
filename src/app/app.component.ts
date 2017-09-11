@@ -11,8 +11,8 @@ import { LocalStorageService } from 'angular-2-local-storage';
 })
 export class AppComponent implements OnInit {
   private _expression: string;
-  private _localThousands;
-  private _localDecimal;
+  private _localThousands: string;
+  _localDecimal: string;
   private _evalError = '…';
 
   displayExpression: string;
@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   inError: boolean;
 
   private _historyKey = 'history';
-  historyList: string[] = [];
+  historyList: { expression: string, result: number }[] = [];
   private _maxHistory = 10;
 
   constructor(
@@ -38,18 +38,24 @@ export class AppComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
-      if (event.key === 'c' || event.key === 'Delete') {
+      if (event.key === '=' || event.key === 'c' || event.key === 'Delete' || event.key === 'Enter') {
         this.resetPress();
-      } else if (event.key === '(' || event.key === ')') {
-        this.parensPress(event.key);
       } else if (event.key === 'Backspace') {
         this.deletePress();
-      } else if (event.key >= '0' && event.key <= '9' || event.key === '.' || event.key === ',') {
-        this.numberPress(event.key !== ',' ? event.key : '.');
-      } else if (event.key === '/' || event.key === '*' || event.key === '-' || event.key === '+') {
-        this.operatorPress(event.key);
-      } else if (event.key === 'Enter') {
-        this._saveToHistory();
+      } else if (event.key >= '0' && event.key <= '9') {
+        this.numberPress(event.key);
+      } else if (event.key === '.' || event.key === ',' || event.key === 'Decimal') {
+        this.numberPress('.');
+      } else if (event.key === '/' || event.key === 'Divide') {
+        this.operatorPress('/');
+      } else if (event.key === '*' || event.key === 'Multiply') {
+        this.operatorPress('*');
+      } else if (event.key === '-' || event.key === 'Subtract') {
+        this.operatorPress('-');
+      } else if (event.key === '+' || event.key === 'Add') {
+        this.operatorPress('+');
+      } else if (event.key === '(' || event.key === ')') {
+        this.parensPress(event.key);
       }
       // console.log(event.key);
     }
@@ -58,7 +64,8 @@ export class AppComponent implements OnInit {
     this._saveToHistory();
     this._assign('');
   }
-  parensPress(keyInput: string) {
+  parensPress(textInput: string) {
+    let keyInput = textInput[0];
     let expr = this._expression;
     //
     expr = this._trimEndDecimal(expr); // Delete ',' in 4,'
@@ -88,8 +95,10 @@ export class AppComponent implements OnInit {
       }
     }
     //
+    textInput = keyInput + textInput.substr(1);
+    //
     expr = this._autoTrimEndDecimals(expr);
-    expr = expr + keyInput;
+    expr = expr + textInput;
     expr = this._replaceAll(expr, '()', ''); // Delete '()'
     //
     this._assign(expr);
@@ -181,6 +190,13 @@ export class AppComponent implements OnInit {
     expr = this._replaceAll(expr, '(+', '(');
     //
     this._assign(expr);
+  }
+  copyToDisplay(text: string) {
+    if (text === null) {
+      this._resetHistory();
+    } else {
+      this.parensPress('(' + text + ')');
+    }
   }
 
   private _assign(expr: string) {
@@ -338,10 +354,16 @@ export class AppComponent implements OnInit {
     }
     return expr;
   }
+  private _resetHistory() {
+    if (this.localStorageService.isSupported) {
+      this.localStorageService.clearAll();
+      this.historyList = [];
+    }
+  }
   private _retrieveHistory() {
     if (this.localStorageService.isSupported) {
       try {
-        const history: string[] = JSON.parse(this.localStorageService.get<string>(this._historyKey));
+        const history: { expression: string, result: number }[] = JSON.parse(this.localStorageService.get<string>(this._historyKey));
         if (history !== null && history.length > 0) {
           this.historyList = history;
         }
@@ -352,12 +374,19 @@ export class AppComponent implements OnInit {
   }
   private _saveToHistory() {
     if (!this.inError && this._expression !== undefined &&
-      this._expression !== '0' && this._expression !== this._result.toString()
+      this._expression !== '0' &&
+      (this._expression !== this._result.toString() && this._expression !== '(' + this._result.toString() + ')')
     ) {
-      const newHist = this._expression + ' = ' + this.localResult;
+      const newHist: { expression: string, result: number } = { expression: this._expression, result: this._result };
       // Avoid duplications
-      if (this.historyList.length > 0 && this.historyList[this.historyList.length - 1] === newHist) {
-        return;
+      if (this.historyList.length > 0) {
+        const lastHist = this.historyList[this.historyList.length - 1];
+        if (
+          (newHist.expression ===  lastHist.expression || newHist.expression === '(' + lastHist.expression + ')') &&
+          newHist.result === lastHist.result
+        ) {
+          return;
+        }
       }
       // Trim history
       while (this.historyList.length >= this._maxHistory) {

@@ -104,7 +104,7 @@
       ></app-button-component>
     </td>
     <td>
-      <app-button-component buttonText="."
+      <app-button-component [buttonText]="this._localDecimal"
         (click)="numberPress('.')"
       ></app-button-component>
     </td>
@@ -116,7 +116,9 @@
   </tr>
   <tr>
     <td td colSpan=4>
-      <app-history [historyList]="this.historyList" [visible]="this.localStorageService.isSupported && this.localStorageService.length() > 0"></app-history>
+      <app-history [historyList]="this.historyList" [visible]="this.localStorageService.isSupported && this.localStorageService.length() > 0"
+          (onCopyToDisplay)="copyToDisplay($event)"
+        ></app-history>
     </td>
   </tr>
 </table>

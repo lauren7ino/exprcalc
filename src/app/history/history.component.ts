@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-history',
@@ -8,10 +8,15 @@ import { Component, Input, OnInit } from '@angular/core';
 export class HistoryComponent implements OnInit {
   @Input() historyList: string[];
   @Input() visible: boolean;
+  @Output() onCopyToDisplay = new EventEmitter<string>();
 
-  constructor() {
+  constructor() { }
+  ngOnInit() { }
+
+  copyToDisplay(text: string) {
+    this.onCopyToDisplay.emit(text);
   }
-
-  ngOnInit() {
+  resetHistory() {
+    this.onCopyToDisplay.emit(null);
   }
 }

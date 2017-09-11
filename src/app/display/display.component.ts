@@ -9,9 +9,6 @@ export class DisplayComponent implements OnInit {
   @Input() labelValue: string;
   @Input() extraClass: string;
 
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
+  constructor() { }
+  ngOnInit() { }
 }
