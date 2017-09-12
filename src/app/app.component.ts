@@ -216,7 +216,7 @@ export class AppComponent implements OnInit {
   private _calculate() {
     try {
       this.result = eval(this.expression);
-      this.localResult = this._beautifyResult(this.result);
+      this.localResult = this.beautifyResult(this.result);
       this.inError = false;
     } catch (e) {
       this.result = undefined;
@@ -327,7 +327,7 @@ export class AppComponent implements OnInit {
     }
     return count;
   }
-  private _beautifyResult(num: number, formatThousands: boolean = true): string {
+  beautifyResult(num: number, formatThousands: boolean = true): string {
     if (!isFinite(num)) {
       return num.toString(); // Nothing to beautify on Infinity or NaN
     }

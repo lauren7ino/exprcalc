@@ -11,7 +11,7 @@
     <td colspan=4>
       <app-display extraClass="{{ inError ? 'red' : 'blue' }}"
         [labelValue]="localResult"
-        [copyToClipboardValue]="_beautifyResult(result, false)"
+        [copyToClipboardValue]="beautifyResult(result, false)"
       ></app-display>
     </td>
   </tr>
