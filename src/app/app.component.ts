@@ -10,13 +10,13 @@ import { LocalStorageService } from 'angular-2-local-storage';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  private _expression: string;
+  expression: string;
   private _localThousands: string;
   _localDecimal: string;
   private _evalError = '…';
 
   displayExpression: string;
-  private _result: any;
+  result: any;
   localResult: string;
   inError: boolean;
 
@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
   }
   parensPress(textInput: string) {
     let keyInput = textInput[0];
-    let expr = this._expression;
+    let expr = this.expression;
     //
     expr = this._trimEndDecimal(expr); // Delete ',' in 4,'
     if (expr === '0' || expr === '-0') {
@@ -104,7 +104,7 @@ export class AppComponent implements OnInit {
     this._assign(expr);
   }
   deletePress() {
-    let expr = this._expression;
+    let expr = this.expression;
     const lastChar = this._lastChar(expr);
     let delMinus = this._isDigit(lastChar);
     expr = this._trimLastChar(expr);   // Actual delete
@@ -125,7 +125,7 @@ export class AppComponent implements OnInit {
     this._assign(expr);
   }
   numberPress(keyInput: string) {
-    let expr = this._expression;
+    let expr = this.expression;
     // Convert ')9' into ')+9'
     if (expr.endsWith(')')) {
       expr += '+';
@@ -151,7 +151,7 @@ export class AppComponent implements OnInit {
     this._assign(expr += keyInput);
   }
   operatorPress(keyInput: string) {
-    let expr = this._expression;
+    let expr = this.expression;
     // Delete end '.'
     expr = this._trimEndDecimal(expr);
     // Invert zero
@@ -203,10 +203,10 @@ export class AppComponent implements OnInit {
     if (expr.length === 0) { // Zero empty display
       expr = '0';
     }
-    if (this._expression === expr) { // Optimization
+    if (this.expression === expr) { // Optimization
       return;
     }
-    this._expression = expr;
+    this.expression = expr;
     // console.log(this._expression);
     this.displayExpression = this._beatifyExpr(expr);
     //
@@ -214,11 +214,11 @@ export class AppComponent implements OnInit {
   }
   private _calculate() {
     try {
-      this._result = eval(this._expression);
-      this.localResult = this._beautifyResult(this._result);
+      this.result = eval(this.expression);
+      this.localResult = this._beautifyResult(this.result);
       this.inError = false;
     } catch (e) {
-      this._result = undefined;
+      this.result = undefined;
       this.localResult = this._evalError; // Can't be evaluated
       this.inError = true;
     }
@@ -373,11 +373,11 @@ export class AppComponent implements OnInit {
     }
   }
   private _saveToHistory() {
-    if (!this.inError && this._expression !== undefined &&
-      this._expression !== '0' &&
-      (this._expression !== this._result.toString() && this._expression !== '(' + this._result.toString() + ')')
+    if (!this.inError && this.expression !== undefined &&
+      this.expression !== '0' &&
+      (this.expression !== this.result.toString() && this.expression !== '(' + this.result.toString() + ')')
     ) {
-      const newHist: { expression: string, result: number } = { expression: this._expression, result: this._result };
+      const newHist: { expression: string, result: number } = { expression: this.expression, result: this.result };
       // Avoid duplications
       if (this.historyList.length > 0) {
         const lastHist = this.historyList[this.historyList.length - 1];

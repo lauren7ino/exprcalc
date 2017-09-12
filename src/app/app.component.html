@@ -3,30 +3,36 @@
     <td colSpan=4>
       <app-display extraClass="fluid basic label" [labelValue]="this.displayExpression"></app-display>
     </td>
+    <td>
+      <app-iconbutton icon="copy" ngxClipboard [cbContent]="this.expression"></app-iconbutton>
+    </td>
   </tr>
   <tr>
     <td colspan=4>
-      <app-display extraClass="fluid {{ this.inError ? 'red' : 'black' }}" [labelValue]="this.localResult"></app-display>
+      <app-display extraClass="fluid {{ this.inError ? 'red' : 'blue' }}" [labelValue]="this.localResult"></app-display>
+    </td>
+    <td>
+      <app-iconbutton icon="copy" ngxClipboard [cbContent]="this.result"></app-iconbutton>
     </td>
   </tr>
   <tr>
     <td>
-      <app-button-component buttonText="C" extraClass="teal"
+      <app-button-component buttonText="C" extraClass="basic"
         (click)="resetPress()"
       ></app-button-component>
     </td>
     <td>
-      <app-button-component buttonText="(" extraClass="teal"
+      <app-button-component buttonText="(" extraClass="basic"
         (click)="parensPress('(')"
       ></app-button-component>
     </td>
     <td>
-      <app-button-component buttonText=")" extraClass="teal"
+      <app-button-component buttonText=")" extraClass="basic"
         (click)="parensPress(')')"
       ></app-button-component>
     </td>
     <td>
-      <app-button-component buttonText="←" extraClass="teal"
+      <app-button-component buttonText="←" extraClass="basic"
         (click)="deletePress()"
       ></app-button-component>
     </td>
@@ -48,7 +54,7 @@
       ></app-button-component>
     </td>
     <td>
-      <app-button-component buttonText="÷" extraClass="orange"
+      <app-button-component buttonText="÷" extraClass="basic orange"
         (click)="operatorPress('/')"
       ></app-button-component>
     </td>
@@ -70,7 +76,7 @@
       ></app-button-component>
     </td>
     <td>
-      <app-button-component buttonText="×" extraClass="orange"
+      <app-button-component buttonText="×" extraClass="basic orange"
         (click)="operatorPress('*')"
       ></app-button-component>
     </td>
@@ -92,7 +98,7 @@
       ></app-button-component>
     </td>
     <td>
-      <app-button-component buttonText="−" extraClass="orange"
+      <app-button-component buttonText="−" extraClass="basic orange"
         (click)="operatorPress('-')"
       ></app-button-component>
     </td>
@@ -109,13 +115,13 @@
       ></app-button-component>
     </td>
     <td>
-      <app-button-component buttonText="+" extraClass="orange"
+      <app-button-component buttonText="+" extraClass="basic orange"
         (click)="operatorPress('+')"
       ></app-button-component>
     </td>
   </tr>
   <tr>
-    <td td colSpan=4>
+    <td colSpan=4>
       <app-history [historyList]="this.historyList" [visible]="this.localStorageService.isSupported && this.localStorageService.length() > 0"
           (onCopyToDisplay)="copyToDisplay($event)"
         ></app-history>
