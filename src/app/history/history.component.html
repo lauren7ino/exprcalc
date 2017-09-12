@@ -1,15 +1,16 @@
-<a class="ui pointing fluid basic label" *ngIf="visible">
-  <a class="ui mini bottom right attached basic label"
+<div class="ui pointing fluid label" *ngIf="visible">
+  <a class="ui"></a>
+  <a class="ui mini top right attached label"
     (click)="resetHistory();"
   >✕</a>
   <div *ngFor="let line of historyList">
       <div class="ui mini basic labeled button">
-        <a class="ui basic right pointing label"
+        <a class="ui right pointing label"
           (click)="copyToDisplay(line.expression);"
         >{{ line.expression }}</a>
-        <a class="ui basic label"
+        <a class="ui label"
           (click)="copyToDisplay(line.result);"
         >{{ line.result }}</a>
       </div>
   </div>
-</a>
+</div>

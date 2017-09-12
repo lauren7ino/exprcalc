@@ -1,18 +1,18 @@
 <table>
   <tr>
     <td colSpan=4>
-      <app-display extraClass="fluid basic label" [labelValue]="this.displayExpression"></app-display>
-    </td>
-    <td>
-      <app-iconbutton icon="copy" ngxClipboard [cbContent]="this.expression"></app-iconbutton>
+      <app-display extraClass="basic"
+        [labelValue]="displayExpression"
+        [copyToClipboardValue]="expression"
+      ></app-display>
     </td>
   </tr>
   <tr>
     <td colspan=4>
-      <app-display extraClass="fluid {{ this.inError ? 'red' : 'blue' }}" [labelValue]="this.localResult"></app-display>
-    </td>
-    <td>
-      <app-iconbutton icon="copy" ngxClipboard [cbContent]="this.result"></app-iconbutton>
+      <app-display extraClass="{{ inError ? 'red' : 'blue' }}"
+        [labelValue]="localResult"
+        [copyToClipboardValue]="_beautifyResult(result, false)"
+      ></app-display>
     </td>
   </tr>
   <tr>
@@ -110,7 +110,7 @@
       ></app-button-component>
     </td>
     <td>
-      <app-button-component [buttonText]="this._localDecimal"
+      <app-button-component [buttonText]="_localDecimal"
         (click)="numberPress('.')"
       ></app-button-component>
     </td>
@@ -122,7 +122,7 @@
   </tr>
   <tr>
     <td colSpan=4>
-      <app-history [historyList]="this.historyList" [visible]="this.localStorageService.isSupported && this.localStorageService.length() > 0"
+      <app-history [historyList]="historyList" [visible]="localStorageService.isSupported && localStorageService.length() > 0"
           (onCopyToDisplay)="copyToDisplay($event)"
         ></app-history>
     </td>

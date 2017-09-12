@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { ButtonComponent } from './button/button.component';
 import { DisplayComponent } from './display/display.component';
 import { HistoryComponent } from './history/history.component';
-import { IconbuttonComponent } from './iconbutton/iconbutton.component';
 
 import { ClipboardModule } from 'ngx-clipboard';
 import { LocalStorageModule } from 'angular-2-local-storage';
@@ -15,8 +14,7 @@ import { LocalStorageModule } from 'angular-2-local-storage';
     AppComponent,
     ButtonComponent,
     DisplayComponent,
-    HistoryComponent,
-    IconbuttonComponent
+    HistoryComponent
 ],
   imports: [
     BrowserModule,

@@ -1,1 +1,8 @@
-<div class="ui big label {{ extraClass }}">{{ labelValue }}</div>
+<div class="ui fluid left labeled button">
+  <div class="ui fluid big label {{ extraClass }}">
+    {{ labelValue }}
+  </div>
+  <div class="ui icon button {{ extraClass }}" ngxClipboard [cbContent]="copyToClipboardValue">
+    <i class="copy icon"></i>
+  </div>
+</div>

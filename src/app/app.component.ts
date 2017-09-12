@@ -21,8 +21,9 @@ export class AppComponent implements OnInit {
   inError: boolean;
 
   private _historyKey = 'history';
-  historyList: { expression: string, result: number }[] = [];
+  historyList: { expression: string, result: string }[] = [];
   private _maxHistory = 10;
+  private _maxDecimalPlaces = 100000.0;
 
   constructor(
     public localStorageService: LocalStorageService
@@ -326,14 +327,14 @@ export class AppComponent implements OnInit {
     }
     return count;
   }
-  private _beautifyResult(num: number): string {
+  private _beautifyResult(num: number, formatThousands: boolean = true): string {
     if (!isFinite(num)) {
       return num.toString(); // Nothing to beautify on Infinity or NaN
     }
     // Beautify manually because toLocaleString() only shows 2 decimals
-    const text = String(Math.round(num * 100000.0) / 100000.0);
+    const text = String(this._round(num));
     const parts = text.split('.');
-    if (this._localThousands !== '') {
+    if (formatThousands && this._localThousands !== '') {
       for (let i = parts[0].length - 3; i > 0; i -= 3) {
         parts[0] = this._insertAt(parts[0], i, this._localThousands);
       }
@@ -343,6 +344,12 @@ export class AppComponent implements OnInit {
     } else {
       return parts[0] + this._localDecimal + parts[1];
     }
+  }
+  private _round(num: number): number {
+    if (!isFinite(num)) {
+      return num;
+    }
+    return Math.round(num * this._maxDecimalPlaces) / this._maxDecimalPlaces;
   }
   private _autoTrimEndDecimals(expr: string): string {
     const lastNum = this._lastNumber(expr);
@@ -363,7 +370,7 @@ export class AppComponent implements OnInit {
   private _retrieveHistory() {
     if (this.localStorageService.isSupported) {
       try {
-        const history: { expression: string, result: number }[] = JSON.parse(this.localStorageService.get<string>(this._historyKey));
+        const history: { expression: string, result: string }[] = JSON.parse(this.localStorageService.get<string>(this._historyKey));
         if (history !== null && history.length > 0) {
           this.historyList = history;
         }
@@ -377,7 +384,9 @@ export class AppComponent implements OnInit {
       this.expression !== '0' &&
       (this.expression !== this.result.toString() && this.expression !== '(' + this.result.toString() + ')')
     ) {
-      const newHist: { expression: string, result: number } = { expression: this.expression, result: this.result };
+      const newHist: { expression: string, result: string } = {
+        expression: this.expression, result: this._round(this.result).toString() // No thousands format
+      };
       // Avoid duplications
       if (this.historyList.length > 0) {
         const lastHist = this.historyList[this.historyList.length - 1];
