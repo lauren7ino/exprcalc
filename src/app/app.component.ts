@@ -10,20 +10,22 @@ import { LocalStorageService } from 'angular-2-local-storage';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  expression: string;
-  private _localThousands: string;
-  _localDecimal: string;
   private _evalError = '…';
+  private _maxDecimalPlaces = 100000.0;
 
+  private _localThousands: string;
+  localDecimal: string;
+
+  expression: string;
   displayExpression: string;
+
   result: any;
   localResult: string;
   inError: boolean;
 
-  private _historyKey = 'history';
   historyList: { expression: string, result: string }[] = [];
+  private _historyKey = 'history';
   private _maxHistory = 10;
-  private _maxDecimalPlaces = 100000.0;
 
   constructor(
     public localStorageService: LocalStorageService
@@ -32,7 +34,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     const localNum = parseFloat('1234.5').toLocaleString();
     this._localThousands = localNum[1] !== '2' ? localNum[1] : ''; // May not exist thousands separator
-    this._localDecimal = localNum[localNum.length - 2];
+    this.localDecimal = localNum[localNum.length - 2];
     this.resetPress();
     this._retrieveHistory();
   }
@@ -60,6 +62,8 @@ export class AppComponent implements OnInit {
       }
       // console.log(event.key);
     }
+
+  // PUBLIC SECTION
 
   resetPress() {
     this._saveToHistory();
@@ -200,6 +204,8 @@ export class AppComponent implements OnInit {
     }
   }
 
+  // PRIVATE SECTION
+
   private _assign(expr: string) {
     if (expr.length === 0) { // Zero empty display
       expr = '0';
@@ -208,15 +214,15 @@ export class AppComponent implements OnInit {
       return;
     }
     this.expression = expr;
-    // console.log(this._expression);
     this.displayExpression = this._beatifyExpr(expr);
+    console.log(this.displayExpression);
     //
     this._calculate();
   }
   private _calculate() {
     try {
       this.result = eval(this.expression);
-      this.localResult = this.beautifyResult(this.result);
+      this.localResult = this._beautifyResult(this.result);
       this.inError = false;
     } catch (e) {
       this.result = undefined;
@@ -232,7 +238,6 @@ export class AppComponent implements OnInit {
       return false;
     }
   }
-
   private _beatifyExpr(expr: string): string {
     // Spaces: Sutract/negative number problem
     if (expr.endsWith('-')) {
@@ -253,7 +258,7 @@ export class AppComponent implements OnInit {
       }
     }
     // Add other spaces
-    expr = this._replaceAll(expr, '.', this._localDecimal);
+    expr = this._replaceAll(expr, '.', this.localDecimal);
     expr = this._replaceAll(expr, '/', ' ÷ ');
     expr = this._replaceAll(expr, '*', ' × ');
     expr = this._replaceAll(expr, '+', ' + ');
@@ -264,7 +269,24 @@ export class AppComponent implements OnInit {
     //
     return expr;
   }
-
+  private _beautifyResult(num: number, formatThousands: boolean = true): string {
+    if (!isFinite(num)) {
+      return num.toString(); // Nothing to beautify on Infinity or NaN
+    }
+    // Beautify manually because toLocaleString() only shows 2 decimals
+    const text = String(this._round(num));
+    const parts = text.split('.');
+    if (formatThousands && this._localThousands !== '') {
+      for (let i = parts[0].length - 3; i > 0; i -= 3) {
+        parts[0] = this._insertAt(parts[0], i, this._localThousands);
+      }
+    }
+    if (parts.length === 1) {
+      return parts[0];
+    } else {
+      return parts[0] + this.localDecimal + parts[1];
+    }
+  }
   private _lastChar(text: string): string {
       if (text.length >= 1 ) {
         return text[text.length - 1];
@@ -286,7 +308,6 @@ export class AppComponent implements OnInit {
     }
     return expr.substr(i + 1);
   }
-
   private _trimLastChar(text: string): string {
       if (text.length >= 1 ) {
         text = text.substring(0, text.length - 1);
@@ -302,14 +323,12 @@ export class AppComponent implements OnInit {
   private _insertAt(text: string, index: number, insert: string) {
     return text.substr(0, index) + insert + text.substr(index);
   }
-
   private _isDigit(chr: string): boolean {
     return chr >= '0' && chr <= '9';
   }
   private _isOperation(chr: string): boolean {
     return chr === '/' || chr === '*' || chr === '-' || chr === '+';
   }
-
   private _replaceAll(text: string, search: string, replace: string): string {
     // Fix chars that are reserved
     for (let i = search.length - 1; i >= 0; i--) {
@@ -326,24 +345,6 @@ export class AppComponent implements OnInit {
       }
     }
     return count;
-  }
-  beautifyResult(num: number, formatThousands: boolean = true): string {
-    if (!isFinite(num)) {
-      return num.toString(); // Nothing to beautify on Infinity or NaN
-    }
-    // Beautify manually because toLocaleString() only shows 2 decimals
-    const text = String(this._round(num));
-    const parts = text.split('.');
-    if (formatThousands && this._localThousands !== '') {
-      for (let i = parts[0].length - 3; i > 0; i -= 3) {
-        parts[0] = this._insertAt(parts[0], i, this._localThousands);
-      }
-    }
-    if (parts.length === 1) {
-      return parts[0];
-    } else {
-      return parts[0] + this._localDecimal + parts[1];
-    }
   }
   private _round(num: number): number {
     if (!isFinite(num)) {
@@ -405,5 +406,11 @@ export class AppComponent implements OnInit {
       this.historyList.push(newHist);
       this.localStorageService.set(this._historyKey, JSON.stringify(this.historyList));
     }
+  }
+  clipboardValue(text: any): string {
+    if (text === undefined) {
+      return null; // Seems like that returning null doesn't copy to clipboard
+    }
+    return this._beautifyResult(text, false);
   }
 }

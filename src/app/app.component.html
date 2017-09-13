@@ -2,16 +2,16 @@
   <tr>
     <td colSpan=4>
       <app-display extraClass="basic"
-        [labelValue]="displayExpression"
-        [copyToClipboardValue]="expression"
+        [label]="displayExpression"
+        [clipboardLabel]="expression"
       ></app-display>
     </td>
   </tr>
   <tr>
     <td colspan=4>
       <app-display extraClass="{{ inError ? 'red' : 'blue' }}"
-        [labelValue]="localResult"
-        [copyToClipboardValue]="beautifyResult(result, false)"
+        [label]="localResult"
+        [clipboardLabel]="clipboardValue(result)"
       ></app-display>
     </td>
   </tr>
@@ -110,7 +110,7 @@
       ></app-button-component>
     </td>
     <td>
-      <app-button-component [buttonText]="_localDecimal"
+      <app-button-component [buttonText]="localDecimal"
         (click)="numberPress('.')"
       ></app-button-component>
     </td>

@@ -6,9 +6,9 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./display.component.css']
 })
 export class DisplayComponent implements OnInit {
-  @Input() labelValue: string;
+  @Input() label: string;
   @Input() extraClass: string;
-  @Input() copyToClipboardValue: string;
+  @Input() clipboardLabel: string;
 
   constructor() { }
   ngOnInit() { }
