@@ -9,7 +9,7 @@
   </tr>
   <tr>
     <td colspan=4>
-      <app-display extraClass="{{ inError ? 'red' : 'blue' }}"
+      <app-display extraClass="{{ inError ? 'red' : 'blue' }}" prefix="= "
         [label]="localResult"
         [clipboardLabel]="clipboardValue(result)"
       ></app-display>
@@ -127,4 +127,16 @@
         ></app-history>
     </td>
   </tr>
+  <tr>
+    <td colSpan=3>
+      <span data-tooltip="Expression Calculator: Created in [Angular Cli]" data-position="bottom left">
+        <i class="grey info icon"></i>
+      </span>
+      <span data-tooltip="Results rounded to 5 decimals" data-position="bottom left">
+          <i class="grey help icon"></i>
+        </span>
+        <span data-tooltip="Use with your keyboard to type" data-position="bottom left">
+          <i class="grey lightbulb icon"></i>
+        </span>
+      </td>
 </table>
