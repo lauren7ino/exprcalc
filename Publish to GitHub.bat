@@ -19,8 +19,11 @@ if errorlevel 1 pause
 cls
 echo Publishing to GitHub 'gh-pages' ...
 echo.
-angular-cli-ghpages
+echo [Type 'exit' on end to continue]
+echo.
+start /b /wait angular-cli-ghpages
 echo.
 if errorlevel 1 pause
+
 start "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" https://github.com/lauren7ino/exprcalc/tree/gh-pages
 start "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" https://lauren7ino.github.io/exprcalc/
