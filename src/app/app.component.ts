@@ -25,7 +25,8 @@ export class AppComponent implements OnInit {
 
   historyList: { expression: string, result: string }[] = [];
   private _historyKey = 'history';
-  private _maxHistory = 7;
+  private _currExprKey = 'expression';
+  private _maxHistory = 15;
 
   constructor(
     public localStorageService: LocalStorageService
@@ -220,9 +221,10 @@ export class AppComponent implements OnInit {
     }
     this.expression = expr;
     this.displayExpression = this._beatifyExpr(expr);
-    console.log(this.displayExpression);
+    // console.log(this.displayExpression);
     //
     this._calculate();
+    this._saveCurrExpr();
   }
   private _calculate() {
     try {
@@ -380,36 +382,49 @@ export class AppComponent implements OnInit {
         if (history !== null && history.length > 0) {
           this.historyList = history;
         }
+        const currExpr: string = this.localStorageService.get<string>(this._currExprKey);
+        if (currExpr !== null) {
+          this._assign(currExpr);
+        }
       } catch (e) {
         this.localStorageService.clearAll(); // Just in case the format changed
       }
     }
   }
+  private _saveCurrExpr() {
+    if (this.localStorageService.isSupported) {
+      if (this.expression !== undefined) {
+        this.localStorageService.set(this._currExprKey, this.expression);
+      }
+    }
+  }
   private _saveToHistory() {
-    if (!this.inError && this.expression !== undefined &&
-      this.expression !== '0' &&
-      (this.expression !== this.result.toString() && this.expression !== '(' + this.result.toString() + ')')
-    ) {
-      const newHist: { expression: string, result: string } = {
-        expression: this.expression, result: this._round(this.result).toString() // No thousands format
-      };
-      // Avoid duplications
-      if (this.historyList.length > 0) {
-        const lastHist = this.historyList[this.historyList.length - 1];
-        if (
-          (newHist.expression ===  lastHist.expression || newHist.expression === '(' + lastHist.expression + ')') &&
-          newHist.result === lastHist.result
-        ) {
-          return;
+    if (this.localStorageService.isSupported) {
+      if (!this.inError && this.expression !== undefined &&
+        this.expression !== '0' &&
+        (this.expression !== this.result.toString() && this.expression !== '(' + this.result.toString() + ')')
+      ) {
+        const newHist: { expression: string, result: string } = {
+          expression: this.expression, result: this._round(this.result).toString() // No thousands format
+        };
+        // Avoid duplications
+        if (this.historyList.length > 0) {
+          const lastHist = this.historyList[this.historyList.length - 1];
+          if (
+            (newHist.expression ===  lastHist.expression || newHist.expression === '(' + lastHist.expression + ')') &&
+            newHist.result === lastHist.result
+          ) {
+            return;
+          }
         }
+        // Trim history
+        while (this.historyList.length >= this._maxHistory) {
+          this.historyList = this.historyList.slice(0, this._maxHistory - 1);
+        }
+        //
+        this.historyList.unshift(newHist);
+        this.localStorageService.set(this._historyKey, JSON.stringify(this.historyList));
       }
-      // Trim history
-      while (this.historyList.length >= this._maxHistory) {
-        this.historyList = this.historyList.slice(0, this._maxHistory - 1);
-      }
-      //
-      this.historyList.unshift(newHist);
-      this.localStorageService.set(this._historyKey, JSON.stringify(this.historyList));
     }
   }
   clipboardValue(text: any): string {

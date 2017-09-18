@@ -2,7 +2,7 @@
   <table align="center" width="100%" style="max-width:355px">
     <tr>
       <td colSpan="4">
-        <app-display extraClass="basic"
+        <app-display extraClass="basic" size="large"
           [label]="displayExpression"
           [clipboardLabel]="expression"
         ></app-display>
@@ -123,20 +123,20 @@
     </tr>
     <tr>
       <td colSpan="4">
-        <app-history [historyList]="historyList" [visible]="localStorageService.isSupported && localStorageService.length() > 0"
+        <app-history [historyList]="historyList" [visible]="localStorageService.isSupported && localStorageService.length() > 1"
             (onCopyToDisplay)="copyToDisplay($event)"
           ></app-history>
       </td>
     </tr>
     <tr>
       <td colSpan="2">
-        <button class="ui mini basic circular icon button" data-tooltip="Expression Calculator in [Angular CLI]" data-position="bottom left">
+        <button class="ui mini basic circular icon button" data-tooltip="Expression Calculator in [Angular CLI]" data-position="right center">
           <i class="grey info icon"></i>
         </button>
-        <button class="ui mini basic circular icon button" data-tooltip="Results rounded to 5 decimals" data-position="bottom left">
+        <button class="ui mini basic circular icon button" data-tooltip="Results rounded to 5 decimals" data-position="right center">
           <i class="grey help icon"></i>
         </button>
-        <button class="ui mini basic circular icon button" data-tooltip="Keyboard supported" data-position="bottom left">
+        <button class="ui mini basic circular icon button" data-tooltip="Keyboard supported" data-position="right center">
           <i class="grey lightbulb icon"></i>
         </button>
       </td>
