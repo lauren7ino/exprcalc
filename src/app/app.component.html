@@ -24,12 +24,12 @@
       </td>
       <td>
         <app-button-component buttonText="(" extraClass="basic"
-          (click)="parensPress('(')"
+          (click)="parensPress('('); false"
         ></app-button-component>
       </td>
       <td>
         <app-button-component buttonText=")" extraClass="basic"
-          (click)="parensPress(')')"
+          (click)="parensPress(')'); false"
         ></app-button-component>
       </td>
       <td>
@@ -130,18 +130,18 @@
     </tr>
     <tr>
       <td colSpan="2">
-        <button class="ui mini basic circular icon button" data-tooltip="Expression Calculator in [Angular CLI]" data-position="right center">
+        <button class="ui mini basic circular icon button" data-tooltip="Expression Calculator in [Angular CLI]" data-position="bottom left">
           <i class="grey info icon"></i>
         </button>
-        <button class="ui mini basic circular icon button" data-tooltip="Results rounded to 5 decimals" data-position="right center">
+        <button class="ui mini basic circular icon button" data-tooltip="Results rounded to 5 decimals" data-position="bottom left">
           <i class="grey help icon"></i>
         </button>
-        <button class="ui mini basic circular icon button" data-tooltip="Keyboard supported" data-position="right center">
+        <button class="ui mini basic circular icon button" data-tooltip="Keyboard supported" data-position="bottom left">
           <i class="grey lightbulb icon"></i>
         </button>
       </td>
       <td colSpan="2" align="right" valign="bottom">
-        <font size="1">Built 15/09/2017</font>
+        <font size="1">Built 18/09/2017</font>
       </td>
     </tr>
   </table>

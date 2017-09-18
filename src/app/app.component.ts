@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
 
   historyList: { expression: string, result: string }[] = [];
   private _historyKey = 'history';
-  private _maxHistory = 11;
+  private _maxHistory = 7;
 
   constructor(
     public localStorageService: LocalStorageService
@@ -107,6 +107,7 @@ export class AppComponent implements OnInit {
     expr = this._replaceAll(expr, '()', ''); // Delete '()'
     //
     this._assign(expr);
+    return false;
   }
   deletePress() {
     let expr = this.expression;
