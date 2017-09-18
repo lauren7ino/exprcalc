@@ -10,7 +10,7 @@
     </tr>
     <tr>
       <td colspan="4" style="padding-bottom:10px;">
-        <app-display extraClass="{{ inError ? 'red' : 'blue' }}"
+        <app-display size="large" extraClass="{{ inError ? 'red' : 'blue' }}"
           [label]="localResult"
           [clipboardLabel]="clipboardValue(result)"
         ></app-display>
@@ -55,7 +55,7 @@
         ></app-button-component>
       </td>
       <td>
-        <app-button-component buttonText="÷" extraClass="basic orange"
+        <app-button-component buttonText="÷" extraClass="basic orange bold"
           (click)="operatorPress('/')"
         ></app-button-component>
       </td>

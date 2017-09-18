@@ -15,6 +15,7 @@ export class HistoryComponent implements OnInit {
 
   copyToDisplay(text: string) {
     this.onCopyToDisplay.emit(text);
+    return false;
   }
   resetHistory() {
     this.onCopyToDisplay.emit(null);
