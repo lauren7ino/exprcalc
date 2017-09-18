@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
 
   historyList: { expression: string, result: string }[] = [];
   private _historyKey = 'history';
-  private _maxHistory = 10;
+  private _maxHistory = 11;
 
   constructor(
     public localStorageService: LocalStorageService
@@ -400,10 +400,10 @@ export class AppComponent implements OnInit {
       }
       // Trim history
       while (this.historyList.length >= this._maxHistory) {
-        this.historyList.shift();
+        this.historyList = this.historyList.slice(0, this._maxHistory - 1);
       }
       //
-      this.historyList.push(newHist);
+      this.historyList.unshift(newHist);
       this.localStorageService.set(this._historyKey, JSON.stringify(this.historyList));
     }
   }

@@ -1,6 +1,6 @@
 <div class="ui pointing fluid label" *ngIf="visible">
   <a class="ui"></a>
-  <a class="ui mini top right attached label" data-tooltip="Clear History" data-position="right center"
+  <a class="ui mini top right attached label"
     (click)="resetHistory();"
   >✕</a>
   <div *ngFor="let line of historyList">
@@ -14,3 +14,4 @@
       </div>
   </div>
 </div>
+<!--  data-tooltip="Clear History" data-position="left center" -->

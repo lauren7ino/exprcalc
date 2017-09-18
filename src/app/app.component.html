@@ -1,5 +1,5 @@
-<div class="ui large tex" style="width:100%; max-width:355px" style="padding:10px">
-  <table width="100%">
+<div style="padding-top:15px; padding-left:15px; padding-right:15px">
+  <table align="center" width="100%" style="max-width:355px">
     <tr>
       <td colSpan="4">
         <app-display extraClass="basic"
@@ -9,8 +9,8 @@
       </td>
     </tr>
     <tr>
-      <td colspan="4">
-        <app-display extraClass="{{ inError ? 'red' : 'blue' }}" prefix="= "
+      <td colspan="4" style="padding-bottom:10px;">
+        <app-display extraClass="{{ inError ? 'red' : 'blue' }}"
           [label]="localResult"
           [clipboardLabel]="clipboardValue(result)"
         ></app-display>
@@ -130,18 +130,18 @@
     </tr>
     <tr>
       <td colSpan="2">
-        <button class="ui mini basic circular icon button" data-tooltip="Expression Calculator in [Angular CLI]" data-position="bottom left">
+        <button class="ui mini basic circular icon button" data-tooltip="Expression Calculator in [Angular CLI]" data-position="right center">
           <i class="grey info icon"></i>
         </button>
-        <button class="ui mini basic circular icon button" data-tooltip="Results rounded to 5 decimals" data-position="bottom left">
+        <button class="ui mini basic circular icon button" data-tooltip="Results rounded to 5 decimals" data-position="right center">
           <i class="grey help icon"></i>
         </button>
-        <button class="ui mini basic circular icon button" data-tooltip="Keyboard supported" data-position="bottom left">
+        <button class="ui mini basic circular icon button" data-tooltip="Keyboard supported" data-position="right center">
           <i class="grey lightbulb icon"></i>
         </button>
       </td>
       <td colSpan="2" align="right" valign="bottom">
-          <font size="1">Built 15/09/2017</font>
+        <font size="1">Built 15/09/2017</font>
       </td>
     </tr>
   </table>
