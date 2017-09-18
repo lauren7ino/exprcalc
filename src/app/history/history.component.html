@@ -3,7 +3,9 @@
   <a class="ui mini top right attached label"
     (click)="resetHistory();"
   >✕</a>
-  <div *ngFor="let line of historyList">
+  <div *ngFor="let line of historyList"
+    (click)="false"
+  >
       <div class="ui mini basic labeled button">
         <a class="ui right pointing label"
           (click)="copyToDisplay(line.expression);"

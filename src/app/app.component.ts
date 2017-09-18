@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
   resetPress() {
     this._saveToHistory();
     this._assign('');
-    return false;
+    return false; // Returning false will prevent the click=>doubleclick=>etc propagation
   }
   parensPress(textInput: string) {
     let keyInput = textInput[0];
@@ -130,6 +130,7 @@ export class AppComponent implements OnInit {
     }
     //
     this._assign(expr);
+    return false;
   }
   numberPress(keyInput: string) {
     let expr = this.expression;
@@ -147,7 +148,7 @@ export class AppComponent implements OnInit {
         // Only one '.' per part
         const lastPart = this._lastNumber(expr);
         if (lastPart.indexOf('.') !== -1) {
-          return;
+          return false;
         }
         // Auto-add '0.'
         if (!this._isDigit(this._lastChar(expr))) {
@@ -156,6 +157,7 @@ export class AppComponent implements OnInit {
     }
     //
     this._assign(expr += keyInput);
+    return false;
   }
   operatorPress(keyInput: string) {
     let expr = this.expression;
@@ -174,7 +176,7 @@ export class AppComponent implements OnInit {
     // Skip '(+'
     let lastChar = this._lastChar(expr);
     if (lastChar === '(' && this._isOperation(keyInput) && keyInput !== '-') {
-      return;
+      return false;
     }
     // '/*+' replaces last '/*-+' (see *1) Note: don't replace '-' in '3*-2'
     if (keyInput !== '-' && this._isOperation(keyInput) && this._isOperation(lastChar)) {
@@ -197,6 +199,7 @@ export class AppComponent implements OnInit {
     expr = this._replaceAll(expr, '(+', '(');
     //
     this._assign(expr);
+    return false;
   }
   copyToDisplay(text: string) {
     if (text === null) {
