@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
   result: any;
   localResult: string;
   inError: boolean;
+  inInit: boolean;
 
   historyList: { expression: string, result: string }[] = [];
   private _historyKey = 'history';
@@ -33,11 +34,13 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.inInit = true;
     const localNum = parseFloat('1234.5').toLocaleString();
     this._localThousands = localNum[1] !== '2' ? localNum[1] : ''; // May not exist thousands separator
     this.localDecimal = localNum[localNum.length - 2];
     this.resetPress();
     this._retrieveHistory();
+    this.inInit = false;
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -213,12 +216,6 @@ export class AppComponent implements OnInit {
   // PRIVATE SECTION
 
   private _assign(expr: string) {
-    if (expr.length === 0) { // Zero empty display
-      expr = '0';
-    }
-    if (this.expression === expr) { // Optimization
-      return;
-    }
     this.expression = expr;
     this.displayExpression = this._beatifyExpr(expr);
     // console.log(this.displayExpression);
@@ -227,8 +224,12 @@ export class AppComponent implements OnInit {
     this._saveCurrExpr();
   }
   private _calculate() {
+    let expr = this.expression;
+    if (expr === '') {
+      expr = '0';
+    }
     try {
-      this.result = eval(this.expression);
+      this.result = eval(expr);
       this.localResult = this._beautifyResult(this.result);
       this.inError = false;
     } catch (e) {
@@ -282,11 +283,12 @@ export class AppComponent implements OnInit {
     }
     // Beautify manually because toLocaleString() only shows 2 decimals
     const text = String(this._round(num));
-    const parts = text.split('.');
+    let parts = text.split('.');
     if (formatThousands && this._localThousands !== '') {
       for (let i = parts[0].length - 3; i > 0; i -= 3) {
         parts[0] = this._insertAt(parts[0], i, this._localThousands);
       }
+      parts[0] = parts[0].replace('-' + this._localThousands, '-');
     }
     if (parts.length === 1) {
       return parts[0];
@@ -392,10 +394,8 @@ export class AppComponent implements OnInit {
     }
   }
   private _saveCurrExpr() {
-    if (this.localStorageService.isSupported) {
-      if (this.expression !== undefined) {
-        this.localStorageService.set(this._currExprKey, this.expression);
-      }
+    if (!this.inInit && this.localStorageService.isSupported) {
+      this.localStorageService.set(this._currExprKey, this.expression);
     }
   }
   private _saveToHistory() {
