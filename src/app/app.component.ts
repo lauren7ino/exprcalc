@@ -68,6 +68,7 @@ export class AppComponent implements OnInit {
   resetPress() {
     this._saveToHistory();
     this._assign('');
+    return false;
   }
   parensPress(textInput: string) {
     let keyInput = textInput[0];
