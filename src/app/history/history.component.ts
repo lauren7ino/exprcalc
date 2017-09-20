@@ -13,11 +13,11 @@ export class HistoryComponent implements OnInit {
   constructor() { }
   ngOnInit() { }
 
-  copyToDisplay(text: string) {
+  copyToDisplay(text: string): boolean {
     this.onCopyToDisplay.emit(text);
     return false;
   }
-  resetHistory() {
+  resetHistory(): void {
     this.onCopyToDisplay.emit(null);
   }
 }

@@ -1,5 +1,5 @@
-<div style="padding-top:15px; padding-left:15px; padding-right:15px">
-  <table align="center" width="100%" style="max-width:355px">
+<div style="padding-top:15px;padding-left:15px;padding-right:15px">
+  <table align="center" style="width:100%;max-width:355px">
     <tr>
       <td colSpan="4">
         <app-display extraClass="basic" size="large"
@@ -9,7 +9,7 @@
       </td>
     </tr>
     <tr>
-      <td colspan="4" style="padding-bottom:10px;">
+      <td colspan="4" style="padding-bottom:10px">
         <app-display size="huge" extraClass="{{ inError ? 'red' : 'blue' }}"
           [label]="localResult"
           [clipboardLabel]="clipboardValue(result)"
@@ -24,12 +24,12 @@
       </td>
       <td>
         <app-button-component buttonText="(" extraClass="basic"
-          (click)="parensPress('('); false"
+          (click)="parensPress('(')"
         ></app-button-component>
       </td>
       <td>
         <app-button-component buttonText=")" extraClass="basic"
-          (click)="parensPress(')'); false"
+          (click)="parensPress(')')"
         ></app-button-component>
       </td>
       <td>
@@ -140,8 +140,8 @@
           <i class="grey lightbulb icon"></i>
         </button>
       </td>
-      <td colSpan="2" align="right" valign="bottom">
-        <font size="1">Built 18/09/2017</font>
+      <td colSpan="2" align="right" style="vertical-align:bottom">
+        <font size="1">Built 19/09/2017</font>
       </td>
     </tr>
   </table>

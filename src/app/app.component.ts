@@ -69,12 +69,12 @@ export class AppComponent implements OnInit {
 
   // PUBLIC SECTION
 
-  resetPress() {
+  resetPress(): boolean {
     this._saveToHistory();
     this._assign('');
     return false; // Returning false will prevent the click=>doubleclick=>etc propagation
   }
-  parensPress(textInput: string) {
+  parensPress(textInput: string): boolean {
     let keyInput = textInput[0];
     let expr = this.expression;
     //
@@ -114,7 +114,7 @@ export class AppComponent implements OnInit {
     this._assign(expr);
     return false;
   }
-  deletePress() {
+  deletePress(): boolean {
     let expr = this.expression;
     const lastChar = this._lastChar(expr);
     let delMinus = this._isDigit(lastChar);
@@ -136,7 +136,7 @@ export class AppComponent implements OnInit {
     this._assign(expr);
     return false;
   }
-  numberPress(keyInput: string) {
+  numberPress(keyInput: string): boolean {
     let expr = this.expression;
     // Convert ')9' into ')+9'
     if (expr.endsWith(')')) {
@@ -163,7 +163,7 @@ export class AppComponent implements OnInit {
     this._assign(expr += keyInput);
     return false;
   }
-  operatorPress(keyInput: string) {
+  operatorPress(keyInput: string): boolean {
     let expr = this.expression;
     // Delete end '.'
     expr = this._trimEndDecimal(expr);
@@ -205,7 +205,7 @@ export class AppComponent implements OnInit {
     this._assign(expr);
     return false;
   }
-  copyToDisplay(text: string) {
+  copyToDisplay(text: string): void {
     if (text === null) {
       this._resetHistory();
     } else {
@@ -215,7 +215,7 @@ export class AppComponent implements OnInit {
 
   // PRIVATE SECTION
 
-  private _assign(expr: string) {
+  private _assign(expr: string): void {
     this.expression = expr;
     this.displayExpression = this._beatifyExpr(expr);
     // console.log(this.displayExpression);
@@ -223,7 +223,7 @@ export class AppComponent implements OnInit {
     this._calculate();
     this._saveCurrExpr();
   }
-  private _calculate() {
+  private _calculate(): void {
     let expr = this.expression;
     if (expr === '') {
       expr = '0';
@@ -283,7 +283,7 @@ export class AppComponent implements OnInit {
     }
     // Beautify manually because toLocaleString() only shows 2 decimals
     const text = String(this._round(num));
-    let parts = text.split('.');
+    const parts = text.split('.');
     if (formatThousands && this._localThousands !== '') {
       for (let i = parts[0].length - 3; i > 0; i -= 3) {
         parts[0] = this._insertAt(parts[0], i, this._localThousands);
@@ -329,7 +329,7 @@ export class AppComponent implements OnInit {
     }
     return expr;
   }
-  private _insertAt(text: string, index: number, insert: string) {
+  private _insertAt(text: string, index: number, insert: string): string {
     return text.substr(0, index) + insert + text.substr(index);
   }
   private _isDigit(chr: string): boolean {
@@ -371,13 +371,13 @@ export class AppComponent implements OnInit {
     }
     return expr;
   }
-  private _resetHistory() {
+  private _resetHistory(): void {
     if (this.localStorageService.isSupported) {
       this.localStorageService.clearAll();
       this.historyList = [];
     }
   }
-  private _retrieveHistory() {
+  private _retrieveHistory(): void {
     if (this.localStorageService.isSupported) {
       try {
         const history: { expression: string, result: string }[] = JSON.parse(this.localStorageService.get<string>(this._historyKey));
@@ -393,12 +393,12 @@ export class AppComponent implements OnInit {
       }
     }
   }
-  private _saveCurrExpr() {
+  private _saveCurrExpr(): void {
     if (!this.inInit && this.localStorageService.isSupported) {
       this.localStorageService.set(this._currExprKey, this.expression);
     }
   }
-  private _saveToHistory() {
+  private _saveToHistory(): void {
     if (this.localStorageService.isSupported) {
       if (!this.inError && this.expression !== undefined &&
         this.expression !== '0' &&
